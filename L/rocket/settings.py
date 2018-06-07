@@ -7,7 +7,7 @@ class Settings():
         # 屏幕设置
         self.screen_width = 800
         self.screen_height = 600
-        self.bg_color = (0, 0, 0)
+        self.bg_color = (255, 255, 255)
 
         # 火箭速度
         self.rocket_speed = 1.5
