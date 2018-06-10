@@ -1,4 +1,3 @@
 {
   "python.linting.pylintEnabled": false,
-  "python.pythonPath": "/anaconda3/bin/python"
 }
