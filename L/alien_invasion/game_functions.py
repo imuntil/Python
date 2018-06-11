@@ -2,6 +2,7 @@ import sys
 import pygame
 from bullet import Bullet
 from alien import Alien
+from time import sleep
 
 
 def check_keydown_events(event, ai_settings, screen, ship, bullets):
@@ -52,13 +53,15 @@ def update_screen(ai_settings, screen, ship, bullets, aliens):
     pygame.display.flip()
 
 
-def update_bullets(bullets):
+def update_bullets(ai_settings, screen, ship, bullets, aliens):
     """ 更新子弹的位置，并删除已经消失的子弹 """
     bullets.update()
 
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
+    # 如果发生碰撞，就删除子弹和外星人
+    check_bullet_alien_collisions(ai_settings, screen, ship, bullets, aliens)
 
 
 def fire_bullet(ai_settings, bullets, screen, ship):
@@ -114,13 +117,44 @@ def check_fleet_edges(ai_settings, aliens):
             change_fleet_direction(ai_settings, aliens)
             break
 
+
 def change_fleet_direction(ai_settings, aliens):
     """ 将aliens整体下移，并改变方向 """
     for alien in aliens.sprites():
         alien.rect.y += ai_settings.fleet_drop_speed
     ai_settings.fleet_direction *= -1
 
-def update_aliens(ai_settings, aliens):
+
+def update_aliens(ai_settings, stats, screen, ship, bullets, aliens):
     """ 检查是否有alien位于屏幕边缘，并更新aliens的位置 """
     check_fleet_edges(ai_settings, aliens)
     aliens.update()
+    """ 检测是否有alien和ship碰撞 """
+    if pygame.sprite.spritecollideany(ship, aliens):
+        ship_hit(ai_settings, stats, screen, ship, aliens, bullets)
+
+
+def check_bullet_alien_collisions(ai_settings, screen, ship, bullets, aliens):
+    """ 响应子弹和外星人的碰撞 """
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+
+    if len(aliens) == 0:
+        bullets.empty()
+        create_fleet(ai_settings, screen, ship, aliens)
+
+
+def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
+    """ alien撞到飞船 """
+    # ships_left 减一
+    stats.ships_left -= 1
+
+    # 清空外星人和子弹列表
+    aliens.empty()
+    bullets.empty()
+
+    # 重新创建一波aliens，并将飞船位置重置
+    create_fleet(ai_settings, screen, ship, aliens)
+    ship.center_ship()
+
+    # 暂停.5s
+    sleep(0.5)
