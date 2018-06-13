@@ -26,9 +26,9 @@ class Basket():
         elif 'R' in self.moving and self.rect.right <= self.screen_rect.right:
             self.x += self.ai_settings.basket_speed_factor
         elif 'L' in self.moving and self.rect.left >= 0:
-            self.x -= self.ai_settings.ball_speed_factor
+            self.x -= self.ai_settings.basket_speed_factor
 
-        self.rect.centerx = self.x
+        self.rect.x = self.x
 
     def draw_basket(self):
         pygame.draw.rect(self.screen, self.color, self.rect)

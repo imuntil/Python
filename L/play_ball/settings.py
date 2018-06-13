@@ -7,12 +7,11 @@ class Settings():
         self.bg_color = (230, 230, 230)
 
         # ball设置
-        self.ball_speed_factor = 0.2
-        self.ball_width = 20
-        self.ball_height = 20
+        self.ball_speed_factor = 5
+        self.ball_radius = 10
 
         # basket设置
-        self.basket_speed_factor = 0.1
+        self.basket_speed_factor = 3
         self.basket_width = 40
         self.basket_height = 25
         self.basket_color = 255, 0, 255
