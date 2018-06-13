@@ -5,6 +5,7 @@ from settings import Settings
 from ship import Ship
 from button import Button
 from game_stats import GameStats
+from scoreboard import Scoreboard
 import game_functions as gf
 
 
@@ -24,6 +25,8 @@ def run_game():
     stats = GameStats(ai_settings)
 
     play_btn = Button(ai_settings, screen, 'Play')
+    # 创建记分板
+    sb = Scoreboard(ai_settings, screen, stats)
 
     # 创建一个用于存储子弹的编组
     bullets = Group()
@@ -35,15 +38,17 @@ def run_game():
     while True:
 
         # 监视键盘和鼠标事件
-        gf.check_events(ai_settings, screen, ship, bullets, stats, play_btn)
+        gf.check_events(ai_settings, screen, ship,
+                        bullets, stats, play_btn, aliens)
 
         if stats.game_active:
             ship.update()
-            gf.update_bullets(ai_settings, screen, ship, bullets, aliens)
+            gf.update_bullets(ai_settings, screen, ship,
+                              bullets, aliens, stats, sb)
             gf.update_aliens(ai_settings, stats, screen, ship, bullets, aliens)
 
         gf.update_screen(ai_settings, screen, ship, bullets, aliens, play_btn,
-                         stats)
+                         stats, sb)
 
 
 run_game()
